@@ -1,0 +1,93 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { fetcher } from '@/lib/api';
+
+type Inquiry = {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+  inquiry_type: string;
+  created_at: string;
+};
+
+export default function InquiriesPage() {
+  const [inquiries, setInquiries] = useState<Inquiry[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadInquiries();
+  }, []);
+
+  const loadInquiries = async () => {
+    try {
+      const data = await fetcher('/inquiries/');
+      setInquiries(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm('Are you sure you want to delete this inquiry?')) return;
+    try {
+      await fetcher(`/inquiries/${id}`, { method: 'DELETE' });
+      setInquiries(inquiries.filter((i) => i.id !== id));
+    } catch (error) {
+      alert('Failed to delete');
+    }
+  };
+
+  if (loading) return <div>Loading...</div>;
+
+  return (
+    <div>
+      <h1 className="text-3xl font-bold text-gray-800 mb-8">Inquiries</h1>
+      
+      <div className="bg-white rounded-xl shadow overflow-hidden">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Message</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {inquiries.map((inquiry) => (
+              <tr key={inquiry.id}>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {new Date(inquiry.created_at).toLocaleDateString()}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm font-medium text-gray-900">{inquiry.name}</div>
+                  <div className="text-sm text-gray-500">{inquiry.email}</div>
+                  <div className="text-sm text-gray-500">{inquiry.phone}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                    {inquiry.inquiry_type}
+                  </span>
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
+                  {inquiry.message}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <button onClick={() => handleDelete(inquiry.id)} className="text-red-600 hover:text-red-900">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
