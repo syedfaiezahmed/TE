@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +12,34 @@ const ContactPage = () => {
     message: ''
   });
 
+  const [contactInfo, setContactInfo] = useState({
+    email: 'info@transemirates.com',
+    phone: '+966 12 345 6789',
+    address: 'Main Commercial District,\nJeddah, Saudi Arabia'
+  });
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        const res = await fetch(`${apiUrl}/content`);
+        if (res.ok) {
+          const data = await res.json();
+          setContactInfo({
+            email: data.contact_email || 'info@transemirates.com',
+            phone: data.contact_phone || '+966 12 345 6789',
+            address: data.address || 'Main Commercial District,\nJeddah, Saudi Arabia'
+          });
+        }
+      } catch (e) {
+        console.error("Failed to fetch contact info");
+      }
+    };
+    fetchContent();
+  }, []);
+
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
@@ -19,11 +47,49 @@ const ContactPage = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log('Form submitted:', formData);
-    alert('Thank you for your message. We will get back to you shortly.');
+    setStatus('loading');
+    
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const payload = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        inquiry_type: formData.inquiryType,
+        message: formData.subject ? `Subject: ${formData.subject}\n\n${formData.message}` : formData.message
+      };
+
+      const res = await fetch(`${apiUrl}/inquiries/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to submit inquiry');
+      }
+
+      setStatus('success');
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        subject: '',
+        inquiryType: 'general',
+        message: ''
+      });
+      alert('Thank you for your message. We will get back to you shortly.');
+    } catch (error) {
+      console.error(error);
+      setStatus('error');
+      alert('Failed to send message. Please try again.');
+    } finally {
+      if (status !== 'success') setStatus('idle');
+    }
   };
 
   return (
@@ -52,15 +118,15 @@ const ContactPage = () => {
                 <div className="space-y-4 text-gray-600">
                   <div className="flex items-start">
                     <span className="text-2xl mr-4">📍</span>
-                    <p>Main Commercial District,<br/>Jeddah, Saudi Arabia</p>
+                    <p className="whitespace-pre-line">{contactInfo.address}</p>
                   </div>
                   <div className="flex items-center">
                     <span className="text-2xl mr-4">📞</span>
-                    <p>+966 12 345 6789</p>
+                    <p>{contactInfo.phone}</p>
                   </div>
                   <div className="flex items-center">
                     <span className="text-2xl mr-4">✉️</span>
-                    <p>info@transemirates.com</p>
+                    <p>{contactInfo.email}</p>
                   </div>
                 </div>
               </div>

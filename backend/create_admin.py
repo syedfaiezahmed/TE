@@ -11,7 +11,12 @@ def create_admin(email, password):
         existing_user = session.exec(statement).first()
         
         if existing_user:
-            print(f"User {email} already exists.")
+            print(f"User {email} already exists. Updating password...")
+            hashed_password = get_password_hash(password)
+            existing_user.password_hash = hashed_password
+            session.add(existing_user)
+            session.commit()
+            print(f"Successfully updated password for: {email}")
             return
 
         hashed_password = get_password_hash(password)

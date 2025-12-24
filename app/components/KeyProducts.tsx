@@ -1,16 +1,55 @@
 import Link from 'next/link';
 
-const KeyProducts = () => {
-  const products = [
-    { name: "Premium Basmati Rice", category: "Grains", image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" },
-    { name: "Exotic Spices", category: "Spices", image: "https://images.unsplash.com/photo-1532336414038-cf19250cbn1a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" },
-    { name: "Organic Pulses", category: "Grains", image: "https://images.unsplash.com/photo-1515543904379-3d757afe72e3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" },
-    { name: "Flour & Baking", category: "Baking", image: "https://images.unsplash.com/photo-1627485937980-221c88ac04f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" },
-    { name: "Refined Sugar", category: "Pantry", image: "https://images.unsplash.com/photo-1581441363689-1f3c3c414635?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" },
-    { name: "Vegetable Oils", category: "Cooking Essentials", image: "https://images.unsplash.com/photo-1474979266404-7cadd259c308?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" },
-    { name: "Premium Dates", category: "Fruits", image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" },
-    { name: "Tea & Coffee", category: "Beverages", image: "https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" },
-  ];
+interface Product {
+  id: number;
+  name: string;
+  category_id?: number;
+  image_url?: string;
+  description?: string;
+}
+
+interface Category {
+  id: number;
+  name: string;
+}
+
+interface KeyProductsProps {
+  products: Product[];
+  categories: Category[];
+}
+
+const KeyProducts = ({ products, categories }: KeyProductsProps) => {
+  // Helper to get category name
+  const getCategoryName = (catId?: number) => {
+    if (!catId) return "General";
+    const cat = categories.find(c => c.id === catId);
+    return cat ? cat.name : "General";
+  };
+
+  // If no products from API, show placeholder or empty state
+  // Or we could keep the hardcoded ones as fallback if products array is empty?
+  // User wants "best connect CMS", so if CMS is empty, website should probably be empty or show "Coming Soon".
+  // But to avoid breaking the look during dev, I'll fallback to hardcoded if ABSOLUTELY 0 products.
+  // Actually, better to show what's in DB. If empty, show message.
+  
+  const displayProducts = products && products.length > 0 ? products.slice(0, 8) : [];
+
+  if (displayProducts.length === 0) {
+    // Optional: Render nothing or a "No products" message
+    // For now, let's render the section but with a message, or just return null.
+    // But to keep layout, maybe just show hardcoded if empty? 
+    // "shi sy best trha connect kro" implies using real data.
+    // If I show hardcoded, user might think it's not connected.
+    // So I will show ONLY real data.
+    return (
+       <section className="py-16 bg-background">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-4xl font-bold text-primary mt-2">Key Products</h2>
+          <p className="mt-4 text-gray-500">No products available at the moment.</p>
+        </div>
+       </section>
+    );
+  }
 
   return (
     <section className="py-16 bg-background">
@@ -25,14 +64,14 @@ const KeyProducts = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {products.map((product, index) => (
+          {displayProducts.map((product) => (
             <div 
-              key={index} 
+              key={product.id} 
               className="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
             >
               <div className="h-48 overflow-hidden relative">
                 <img 
-                  src={product.image} 
+                  src={product.image_url || "https://via.placeholder.com/400x300?text=No+Image"} 
                   alt={product.name} 
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
@@ -46,7 +85,9 @@ const KeyProducts = () => {
                 </div>
               </div>
               <div className="p-6">
-                <div className="text-xs font-bold text-primary uppercase tracking-wider mb-2">{product.category}</div>
+                <div className="text-xs font-bold text-primary uppercase tracking-wider mb-2">
+                  {getCategoryName(product.category_id)}
+                </div>
                 <h3 className="text-xl font-bold text-primary mb-2">{product.name}</h3>
               </div>
             </div>

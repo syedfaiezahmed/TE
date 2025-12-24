@@ -1,12 +1,21 @@
 import Link from 'next/link';
 
-const WhoWeAre = () => {
+interface WhoWeAreProps {
+  content: Record<string, string>;
+}
+
+const WhoWeAre = ({ content }: WhoWeAreProps) => {
+  const title = content.whoweare_title || "Who We Are";
+  // Fallback text if not provided in CMS
+  const defaultText = "A leading distributor of premium food products across major cities and rural markets in the Kingdom of Saudi Arabia. We ensure quality and reliability in every delivery, connecting global producers with local consumers.";
+  const mainText = content.whoweare_text || defaultText;
+
   return (
     <section className="py-16 bg-background overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <span className="text-primary font-bold uppercase tracking-widest text-sm bg-secondary/10 px-4 py-1 rounded-full">Our Divisions</span>
-          <h2 className="text-4xl md:text-5xl font-bold text-primary mt-4">Who We Are</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-primary mt-4">{title}</h2>
           <div className="w-24 h-1.5 bg-accent mx-auto mt-6 rounded-full"></div>
         </div>
 
@@ -35,7 +44,7 @@ const WhoWeAre = () => {
               </div>
               
               <p className="text-primary/80 text-lg leading-relaxed">
-                A leading distributor of premium food products across major cities and rural markets in the Kingdom of Saudi Arabia. We ensure quality and reliability in every delivery, connecting global producers with local consumers.
+                {mainText}
               </p>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

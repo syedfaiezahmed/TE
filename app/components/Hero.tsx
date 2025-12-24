@@ -1,13 +1,22 @@
 import Link from 'next/link';
 
-const Hero = () => {
+interface HeroProps {
+  content: Record<string, string>;
+}
+
+const Hero = ({ content }: HeroProps) => {
+  const bgImage = content.hero_image || "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80";
+  const title = content.hero_title || "Trans Emirates Company";
+  const subtitle = content.hero_subtitle || "Trusted Trading and Consulting Partner in Saudi Arabia";
+  const description = content.hero_description || "Serving the Saudi market for over 25 years in food distribution, supply chain, and business consulting.";
+
   return (
     <div className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
       {/* Background Image with Overlay */}
       <div 
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')", // Warehouse/Logistics image
+          backgroundImage: `url('${bgImage}')`,
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-r from-primary/95 to-primary/70 mix-blend-multiply"></div>
@@ -16,12 +25,12 @@ const Hero = () => {
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center text-white">
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate-fade-in-up">
-          <span className="block text-accent mb-2">Trans Emirates Company</span>
-          <span className="block text-2xl md:text-4xl lg:text-5xl font-light">Trusted Trading and Consulting Partner in Saudi Arabia</span>
+          <span className="block text-accent mb-2">{title}</span>
+          <span className="block text-2xl md:text-4xl lg:text-5xl font-light">{subtitle}</span>
         </h1>
         
         <p className="text-lg md:text-xl lg:text-2xl mb-10 max-w-3xl mx-auto text-gray-200 font-light leading-relaxed">
-          Serving the Saudi market for over 25 years in food distribution, supply chain, and business consulting.
+          {description}
         </p>
 
         <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-6">

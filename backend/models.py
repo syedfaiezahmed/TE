@@ -70,3 +70,35 @@ class TokenData(SQLModel):
 class AdminLogin(SQLModel):
     email: str
     password: str
+
+# 6. Chatbot Knowledge Base
+class ChatbotKnowledge(SQLModel, table=True):
+    __tablename__ = "chatbot_knowledge"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    question: str = Field(index=True) # The question or keywords
+    answer: str
+    is_active: bool = Field(default=True)
+
+class EmbeddingDocument(SQLModel, table=True):
+    __tablename__ = "embedding_documents"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    source_type: str = Field(index=True)
+    source_id: Optional[str] = Field(default=None, index=True)
+    text: str
+    embedding_json: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class ChatSession(SQLModel, table=True):
+    __tablename__ = "chat_sessions"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    session_id: str = Field(index=True, unique=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class ChatMessage(SQLModel, table=True):
+    __tablename__ = "chat_messages"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    session_id: str = Field(index=True)
+    role: str
+    content: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)

@@ -2,7 +2,17 @@
 
 import Link from 'next/link';
 
-const Footer = () => {
+interface FooterProps {
+  content?: Record<string, string>;
+}
+
+const Footer = ({ content = {} }: FooterProps) => {
+  const email = content.contact_email || "info@transemirates.com";
+  const phone = content.contact_phone || "+966 12 345 6789";
+  const address = content.address || "Main Commercial District,\nJeddah, Saudi Arabia";
+  const companyName = content.company_name || "Trans Emirates";
+  const description = content.footer_description || "Your trusted partner in food distribution, supply chain management, and business consulting across the Kingdom of Saudi Arabia.";
+
   return (
     <footer className="bg-secondary text-primary relative overflow-hidden">
       <div className="container mx-auto px-4 pt-12 pb-8 relative z-10">
@@ -12,10 +22,10 @@ const Footer = () => {
           <div className="lg:col-span-4 space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-secondary font-bold text-2xl shadow-sm">TE</div>
-              <h3 className="text-3xl font-bold text-white tracking-tight">Trans Emirates</h3>
+              <h3 className="text-3xl font-bold text-white tracking-tight">{companyName}</h3>
             </div>
             <p className="text-primary/90 leading-relaxed font-medium text-lg pr-4">
-              Your trusted partner in food distribution, supply chain management, and business consulting across the Kingdom of Saudi Arabia.
+              {description}
             </p>
             <div className="flex space-x-4">
               <a href="#" className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white hover:bg-primary hover:text-white transition-all duration-300">
@@ -52,27 +62,10 @@ const Footer = () => {
                 </div>
                 <div>
                   <strong className="text-white block text-lg mb-1">Jeddah (HQ)</strong>
-                  <span className="text-primary/80 text-sm font-medium">Main Commercial District</span>
+                  <span className="text-primary/80 text-sm font-medium whitespace-pre-line">{address}</span>
                 </div>
               </li>
-              <li className="flex gap-4 group">
-                <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center text-white/80 shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h8a1 1 0 001-1zm8-1a1 1 0 00-1-1h-6v-3a1 1 0 00-1-1H4a1 1 0 00-1 1v7h15a1 1 0 001-1z" /></svg>
-                </div>
-                <div>
-                  <strong className="text-white block text-lg mb-1">Khamis Mushait</strong>
-                  <span className="text-primary/80 text-sm font-medium">Logistics Center</span>
-                </div>
-              </li>
-              <li className="flex gap-4 group">
-                <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center text-white/80 shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                </div>
-                <div>
-                  <strong className="text-white block text-lg mb-1">Tabuk</strong>
-                  <span className="text-primary/80 text-sm font-medium">Northern Trade Hub</span>
-                </div>
-              </li>
+              {/* Other locations hardcoded for now or add more fields later */}
             </ul>
           </div>
 
@@ -98,9 +91,10 @@ const Footer = () => {
         <div className="border-t border-primary/10 pt-6 flex flex-col md:flex-row justify-between items-center text-sm font-medium text-primary/70">
           <p>&copy; {new Date().getFullYear()} Trans Emirates Company. All Rights Reserved.</p>
           <div className="flex space-x-8 mt-4 md:mt-0">
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-            <Link href="/sitemap" className="hover:text-white transition-colors">Sitemap</Link>
+             <div className="flex items-center gap-2">
+                <span>📞 {phone}</span>
+                <span>✉️ {email}</span>
+             </div>
           </div>
         </div>
       </div>
