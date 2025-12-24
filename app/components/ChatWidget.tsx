@@ -16,7 +16,7 @@ type Message = {
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { id: '1', sender: 'bot', text: 'Hi! How can I help you today?', type: 'text' }
+    { id: '1', sender: 'bot' as const, text: 'Hi! How can I help you today?', type: 'text' as const }
   ]);
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(false);
@@ -39,7 +39,7 @@ export default function ChatWidget() {
   const handleSend = async () => {
     if (!inputText.trim()) return;
 
-    const userMsg: Message = { id: Date.now().toString(), sender: 'user', text: inputText, type: 'text' };
+    const userMsg: Message = { id: Date.now().toString(), sender: 'user' as const, text: inputText, type: 'text' as const };
     setMessages(prev => [...prev, userMsg]);
     setInputText('');
     setLoading(true);
@@ -61,20 +61,20 @@ export default function ChatWidget() {
           res.sources.length > 0;
         setMessages(prev => [
           ...prev, 
-          { id: Date.now().toString(), sender: 'bot', text: String(res.answer ?? ''), type: 'text', sources: Array.isArray(res.sources) ? res.sources : [], kind: typeof res.kind === 'string' ? res.kind : 'answer', suggestions: Array.isArray(res.suggestions) ? res.suggestions : [] },
+          { id: Date.now().toString(), sender: 'bot' as const, text: String(res.answer ?? ''), type: 'text' as const, sources: Array.isArray(res.sources) ? res.sources : [], kind: typeof res.kind === 'string' ? res.kind : 'answer', suggestions: Array.isArray(res.suggestions) ? res.suggestions : [] },
           ...(shouldAskSatisfaction ? [
-            { id: (Date.now() + 1).toString(), sender: 'bot', text: 'Was this information helpful?', type: 'satisfaction' }
+            { id: (Date.now() + 1).toString(), sender: 'bot' as const, text: 'Was this information helpful?', type: 'satisfaction' as const }
           ] : [])
         ]);
       } else {
         setMessages(prev => [
           ...prev, 
-          { id: Date.now().toString(), sender: 'bot', text: "I'm sorry, I don't have that information right now. Please provide your name and number, and our team will contact you shortly.", type: 'form' }
+          { id: Date.now().toString(), sender: 'bot' as const, text: "I'm sorry, I don't have that information right now. Please provide your name and number, and our team will contact you shortly.", type: 'form' as const }
         ]);
         setFormStep('fallback');
       }
     } catch {
-      setMessages(prev => [...prev, { id: Date.now().toString(), sender: 'bot', text: "Sorry, something went wrong. Please try again later.", type: 'text' }]);
+      setMessages(prev => [...prev, { id: Date.now().toString(), sender: 'bot' as const, text: "Sorry, something went wrong. Please try again later.", type: 'text' as const }]);
     } finally {
       setLoading(false);
     }
@@ -84,13 +84,13 @@ export default function ChatWidget() {
     if (satisfied) {
       setMessages(prev => [
         ...prev, 
-        { id: Date.now().toString(), sender: 'bot', text: "Great! Please provide your name and number so we can record your satisfaction and proceed further.", type: 'form' }
+        { id: Date.now().toString(), sender: 'bot' as const, text: "Great! Please provide your name and number so we can record your satisfaction and proceed further.", type: 'form' as const }
       ]);
       setFormStep('success');
     } else {
        setMessages(prev => [
         ...prev, 
-        { id: Date.now().toString(), sender: 'bot', text: "I see. Please provide your name and number, and a human agent will contact you to assist better.", type: 'form' }
+        { id: Date.now().toString(), sender: 'bot' as const, text: "I see. Please provide your name and number, and a human agent will contact you to assist better.", type: 'form' as const }
       ]);
       setFormStep('fallback');
     }
@@ -118,13 +118,13 @@ export default function ChatWidget() {
 
       setMessages(prev => [
         ...prev, 
-        { id: Date.now().toString(), sender: 'bot', text: "Thank you! We have received your details and will be in touch soon.", type: 'text' }
+        { id: Date.now().toString(), sender: 'bot' as const, text: "Thank you! We have received your details and will be in touch soon.", type: 'text' as const }
       ]);
       setFormStep('idle');
       setFormData({ name: '', phone: '' });
 
     } catch {
-       setMessages(prev => [...prev, { id: Date.now().toString(), sender: 'bot', text: "Failed to save details. Please try contacting us via the Contact page.", type: 'text' }]);
+       setMessages(prev => [...prev, { id: Date.now().toString(), sender: 'bot' as const, text: "Failed to save details. Please try contacting us via the Contact page.", type: 'text' as const }]);
     } finally {
       setLoading(false);
     }
