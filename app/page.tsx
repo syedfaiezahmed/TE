@@ -10,13 +10,22 @@ import LeadershipMessage from "./components/LeadershipMessage";
 async function getContent() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
   try {
-    const res = await fetch(`${apiUrl}/content`, { cache: 'no-store' });
-    if (!res.ok) {
+    // Check if backend is reachable before fetching
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 1000); // 1s timeout
+    const res = await fetch(`${apiUrl}/content`, { 
+      cache: 'no-store',
+      signal: controller.signal
+    }).catch(() => null);
+    
+    clearTimeout(timeoutId);
+
+    if (!res || !res.ok) {
       throw new Error('Failed to fetch content');
     }
     return res.json();
   } catch (error) {
-    console.error("Error fetching content:", error);
+    console.log("Using fallback content (backend unreachable)");
     return {};
   }
 }
@@ -25,15 +34,21 @@ async function getContent() {
 async function getProducts() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
   try {
-    const res = await fetch(`${apiUrl}/products?limit=8`, { cache: 'no-store' });
-    if (!res.ok) {
-      // If endpoint doesn't support limit, it might return all. We handle slicing in UI if needed.
-      // But let's assume it returns a list.
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 1000);
+    const res = await fetch(`${apiUrl}/products?limit=8`, { 
+      cache: 'no-store',
+      signal: controller.signal 
+    }).catch(() => null);
+    
+    clearTimeout(timeoutId);
+
+    if (!res || !res.ok) {
       throw new Error('Failed to fetch products');
     }
     return res.json();
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.log("Using fallback products (backend unreachable)");
     return [];
   }
 }
@@ -42,11 +57,19 @@ async function getProducts() {
 async function getCategories() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
   try {
-    const res = await fetch(`${apiUrl}/categories`, { cache: 'no-store' });
-    if (!res.ok) throw new Error('Failed to fetch categories');
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 1000);
+    const res = await fetch(`${apiUrl}/categories`, { 
+      cache: 'no-store',
+      signal: controller.signal
+    }).catch(() => null);
+
+    clearTimeout(timeoutId);
+
+    if (!res || !res.ok) throw new Error('Failed to fetch categories');
     return res.json();
   } catch (error) {
-    console.error("Error fetching categories:", error);
+    console.log("Using fallback categories (backend unreachable)");
     return [];
   }
 }
@@ -61,12 +84,12 @@ export default async function Home() {
   return (
     <div className="min-h-screen">
       <Hero content={content} />
-      <TrustedPartners />
       <WhoWeAre content={content} />
-      <OurStrength />
-      <IndustriesServed />
       <KeyProducts products={products} categories={categories} />
-      <LeadershipMessage />
+      <OurStrength content={content} />
+      <IndustriesServed />
+      <TrustedPartners />
+      <LeadershipMessage content={content} />
     </div>
   );
 }

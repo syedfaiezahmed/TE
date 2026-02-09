@@ -5,10 +5,12 @@ interface HeroProps {
 }
 
 const Hero = ({ content }: HeroProps) => {
+  // Zoiko-style: Global Trade / Logistics / Port / Containers
+  // Emphasize scale and export/import capability
   const bgImage = content.hero_image || "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80";
-  const title = content.hero_title || "Trans Emirates Company";
-  const subtitle = content.hero_subtitle || "Trusted Trading and Consulting Partner in Saudi Arabia";
-  const description = content.hero_description || "Serving the Saudi market for over 25 years in food distribution, supply chain, and business consulting.";
+  const title = content.hero_title || "Global Food Commodity Trading";
+  const subtitle = content.hero_subtitle || "Bulk Supply of Rice, Sugar, Grains & Oils";
+  const description = content.hero_description || "Your trusted partner for large-scale food import & export. Connecting global producers to the Saudi market with efficiency and reliability.";
 
   return (
     <div className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
@@ -19,7 +21,8 @@ const Hero = ({ content }: HeroProps) => {
           backgroundImage: `url('${bgImage}')`,
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/95 to-primary/70 mix-blend-multiply"></div>
+        {/* Gradient Overlay - adjusted transparency to show image */}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/70 to-primary/50 mix-blend-multiply"></div>
       </div>
 
       {/* Content */}
@@ -29,9 +32,10 @@ const Hero = ({ content }: HeroProps) => {
           <span className="block text-2xl md:text-4xl lg:text-5xl font-light">{subtitle}</span>
         </h1>
         
-        <p className="text-lg md:text-xl lg:text-2xl mb-10 max-w-3xl mx-auto text-gray-200 font-light leading-relaxed">
-          {description}
-        </p>
+        <div 
+          className="text-lg md:text-xl lg:text-2xl mb-10 max-w-3xl mx-auto text-gray-200 font-light leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: description }}
+        />
 
         <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-6">
           <Link 

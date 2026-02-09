@@ -14,16 +14,29 @@ class Category(SQLModel, table=True):
     __tablename__ = "categories"
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(index=True)
+    slug: str = Field(index=True, unique=True)
     description: Optional[str] = None
+    image_url: Optional[str] = None
+    display_order: int = Field(default=0)
+    seo_title: Optional[str] = None
+    seo_description: Optional[str] = None
+    packing_options: Optional[str] = None
     products: List["Product"] = Relationship(back_populates="category")
 
 class Product(SQLModel, table=True):
     __tablename__ = "products"
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(index=True)
-    description: Optional[str] = None
-    image_url: Optional[str] = None
+    slug: str = Field(index=True, unique=True)
+    description: Optional[str] = None # Short description
+    rich_description: Optional[str] = None # HTML Content
+    image_url: Optional[str] = None # Main image
+    images: Optional[str] = None # JSON list of additional images
+    price: Optional[float] = None
+    stock_status: str = Field(default="in_stock")
     is_active: bool = Field(default=True)
+    seo_title: Optional[str] = None
+    seo_description: Optional[str] = None
     category_id: Optional[int] = Field(default=None, foreign_key="categories.id")
     category: Optional[Category] = Relationship(back_populates="products")
 
@@ -38,11 +51,39 @@ class Inquiry(SQLModel, table=True):
     inquiry_type: str  # Contact, Quote, Supplier, Consulting
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
-# 4. Website Content (Key-Value Store)
+# 4. Website Content (Pages & Key-Value Store)
 class SiteContent(SQLModel, table=True):
     __tablename__ = "site_content"
     key: str = Field(primary_key=True)
     value: str
+
+class Page(SQLModel, table=True):
+    __tablename__ = "pages"
+    slug: str = Field(primary_key=True)
+    title: str
+    content: str # HTML Content
+    seo_title: Optional[str] = None
+    seo_description: Optional[str] = None
+    is_published: bool = Field(default=True)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class Banner(SQLModel, table=True):
+    __tablename__ = "banners"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    title: str
+    image_url: str
+    link_url: Optional[str] = None
+    position: str = Field(default="home_hero") # e.g., 'home_hero', 'home_promo'
+    display_order: int = Field(default=0)
+    is_active: bool = Field(default=True)
+
+class MediaAsset(SQLModel, table=True):
+    __tablename__ = "media_assets"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    filename: str
+    url: str
+    file_type: str
+    uploaded_at: datetime = Field(default_factory=datetime.utcnow)
 
 # 5. Market Coverage
 class Region(SQLModel, table=True):

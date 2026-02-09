@@ -1,9 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from database import create_db_and_tables, engine
 from sqlmodel import Session, select
 from models import SiteContent, Product
-from routers import auth, products, inquiries, content, coverage, chatbot
+from routers import auth, products, inquiries, content, coverage, chatbot, media
 from dotenv import load_dotenv
 import os
 
@@ -14,6 +15,8 @@ app = FastAPI(
     description="Simple corporate backend for Trans Emirates Company",
     version="1.0.0"
 )
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # CORS Configuration
 origins = [
@@ -38,6 +41,7 @@ app.include_router(inquiries.router)
 app.include_router(content.router)
 app.include_router(coverage.router)
 app.include_router(chatbot.router)
+app.include_router(media.router)
 
 @app.on_event("startup")
 def on_startup():

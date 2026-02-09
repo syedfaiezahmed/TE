@@ -1,14 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Map from '../components/Map';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    company: '',
     phone: '',
-    subject: '',
-    inquiryType: 'general',
+    country: '',
+    inquiryType: 'bulk_inquiry',
     message: ''
   });
 
@@ -21,9 +23,17 @@ const ContactPage = () => {
   useEffect(() => {
     const fetchContent = async () => {
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2000);
+        
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-        const res = await fetch(`${apiUrl}/content`);
-        if (res.ok) {
+        const res = await fetch(`${apiUrl}/content`, { 
+          signal: controller.signal 
+        }).catch(() => null);
+        
+        clearTimeout(timeoutId);
+
+        if (res && res.ok) {
           const data = await res.json();
           setContactInfo({
             email: data.contact_email || 'info@transemirates.com',
@@ -32,7 +42,8 @@ const ContactPage = () => {
           });
         }
       } catch (e) {
-        console.error("Failed to fetch contact info");
+        // Silently fail to fallback data
+        console.warn("Using fallback contact info");
       }
     };
     fetchContent();
@@ -58,7 +69,7 @@ const ContactPage = () => {
         email: formData.email,
         phone: formData.phone,
         inquiry_type: formData.inquiryType,
-        message: formData.subject ? `Subject: ${formData.subject}\n\n${formData.message}` : formData.message
+        message: `Company: ${formData.company}\nCountry: ${formData.country}\n\n${formData.message}`
       };
 
       const res = await fetch(`${apiUrl}/inquiries/`, {
@@ -77,9 +88,10 @@ const ContactPage = () => {
       setFormData({
         name: '',
         email: '',
+        company: '',
         phone: '',
-        subject: '',
-        inquiryType: 'general',
+        country: '',
+        inquiryType: 'bulk_inquiry',
         message: ''
       });
       alert('Thank you for your message. We will get back to you shortly.');
@@ -96,12 +108,17 @@ const ContactPage = () => {
     <div className="pt-20">
       {/* Hero Section */}
       <section className="relative py-20 bg-primary text-white overflow-hidden">
+        {/* Background Image - Global Connectivity */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-20"
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1578575437130-527eed3abbec?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')" }}
+        ></div>
         <div className="absolute inset-0 bg-black/20 z-0"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4 animate-fade-in-up">Contact Us</h1>
+          <h1 className="text-4xl md:text-6xl font-bold mb-4 animate-fade-in-up">Global Trade Inquiries</h1>
           <div className="w-24 h-1 bg-accent mx-auto mb-6"></div>
           <p className="text-xl md:text-2xl max-w-3xl mx-auto font-light leading-relaxed text-gray-200">
-            Get in touch with our team for trading inquiries, consulting services, or partnership opportunities.
+            Partner with us for reliable bulk food supply and logistics solutions.
           </p>
         </div>
       </section>
@@ -145,50 +162,35 @@ const ContactPage = () => {
                   </div>
                 </div>
               </div>
-
-              {/* Prospera Consulting */}
-              <div className="bg-primary text-white p-8 rounded-2xl shadow-lg">
-                <h3 className="text-2xl font-bold mb-2">Prospera Consulting</h3>
-                <p className="text-white/80 mb-6 text-sm">For financial & business advisory inquiries</p>
-                <div className="space-y-3">
-                   <div className="flex items-center">
-                    <span className="mr-3">📧</span>
-                    <p>consulting@transemirates.com</p>
-                  </div>
-                  <div className="flex items-center">
-                    <span className="mr-3">📱</span>
-                    <p>+966 50 123 4567</p>
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* Contact Form */}
             <div className="w-full lg:w-2/3">
-              <div className="bg-white p-8 md:p-12 rounded-3xl shadow-xl">
-                <h2 className="text-3xl font-bold text-primary mb-8">Send us a Message</h2>
+              <div className="bg-white p-8 md:p-12 rounded-lg shadow-lg border border-gray-100">
+                <h2 className="text-3xl font-bold text-primary mb-2">Trade Inquiry Form</h2>
+                <p className="text-gray-500 mb-8">Please provide your business details for a formal quotation.</p>
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-gray-700 font-bold mb-2">Full Name</label>
+                      <label className="block text-gray-700 font-bold mb-2 text-sm uppercase tracking-wide">Full Name</label>
                       <input 
                         type="text" 
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-gray-50"
                         placeholder="John Doe"
                         required
                       />
                     </div>
                     <div>
-                      <label className="block text-gray-700 font-bold mb-2">Email Address</label>
+                      <label className="block text-gray-700 font-bold mb-2 text-sm uppercase tracking-wide">Business Email</label>
                       <input 
                         type="email" 
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-gray-50"
                         placeholder="john@company.com"
                         required
                       />
@@ -197,70 +199,100 @@ const ContactPage = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-gray-700 font-bold mb-2">Phone Number</label>
+                      <label className="block text-gray-700 font-bold mb-2 text-sm uppercase tracking-wide">Company Name</label>
+                      <input 
+                        type="text" 
+                        name="company"
+                        value={formData.company}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-gray-50"
+                        placeholder="Your Company Ltd."
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-bold mb-2 text-sm uppercase tracking-wide">Phone Number</label>
                       <input 
                         type="tel" 
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                        placeholder="+966 5..."
+                        className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-gray-50"
+                        placeholder="+966 55 ..."
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-gray-700 font-bold mb-2 text-sm uppercase tracking-wide">Country</label>
+                      <input 
+                        type="text" 
+                        name="country"
+                        value={formData.country}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-gray-50"
+                        placeholder="Saudi Arabia"
+                        required
                       />
                     </div>
                     <div>
-                      <label className="block text-gray-700 font-bold mb-2">Inquiry Type</label>
+                      <label className="block text-gray-700 font-bold mb-2 text-sm uppercase tracking-wide">Inquiry Type</label>
                       <select 
                         name="inquiryType"
                         value={formData.inquiryType}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-white"
+                        className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-gray-50"
                       >
-                        <option value="general">General Inquiry</option>
-                        <option value="trading">Product Supply / Trading</option>
-                        <option value="consulting">Prospera Consulting Services</option>
+                        <option value="bulk_inquiry">Bulk Purchase Inquiry</option>
+                        <option value="logistics">Logistics & Distribution</option>
                         <option value="supplier">Become a Supplier</option>
-                        <option value="career">Careers</option>
+                        <option value="other">General Inquiry</option>
                       </select>
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-gray-700 font-bold mb-2">Subject</label>
-                    <input 
-                      type="text" 
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                      placeholder="How can we help you?"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-gray-700 font-bold mb-2">Message</label>
+                    <label className="block text-gray-700 font-bold mb-2 text-sm uppercase tracking-wide">Message / Requirements</label>
                     <textarea 
                       name="message"
                       value={formData.message}
                       onChange={handleChange}
                       rows={5}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                      placeholder="Tell us more about your requirements..."
+                      className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-gray-50"
+                      placeholder="Please specify your requirements (Product, Quantity, Destination)..."
                       required
                     ></textarea>
                   </div>
 
                   <button 
                     type="submit" 
-                    className="w-full bg-primary text-white font-bold py-4 rounded-lg hover:bg-primary-light transition-all shadow-lg transform hover:-translate-y-1"
+                    disabled={status === 'loading'}
+                    className={`w-full bg-accent text-primary font-bold py-4 rounded-md transition-all transform hover:-translate-y-1 shadow-md uppercase tracking-widest ${
+                      status === 'loading' ? 'opacity-70 cursor-not-allowed' : 'hover:bg-accent-light'
+                    }`}
                   >
-                    Send Message
+                    {status === 'loading' ? 'Sending...' : 'Submit Inquiry'}
                   </button>
                 </form>
               </div>
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Map Section */}
+      <section className="h-[500px] w-full relative z-0 border-t border-gray-200">
+        <Map 
+          center={[21.5433, 39.1728]} 
+          zoom={13} 
+          markers={[
+            { position: [21.5433, 39.1728], title: "Head Office", description: "Main Commercial District, Jeddah" },
+            { position: [18.3000, 42.7333], title: "Khamis Mushait Branch", description: "Logistics Center" },
+            { position: [28.3833, 36.5667], title: "Tabuk Branch", description: "Northern Trade Hub" }
+          ]} 
+        />
       </section>
     </div>
   );

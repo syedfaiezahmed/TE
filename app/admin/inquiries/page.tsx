@@ -1,23 +1,22 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { fetcher } from '@/lib/api';
 
-type Inquiry = {
+interface Inquiry {
   id: number;
   name: string;
   email: string;
-  phone: string;
+  phone?: string;
   message: string;
   inquiry_type: string;
   created_at: string;
-};
+}
 
 export default function InquiriesPage() {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState<Inquiry | null>(null);
-  const [showModal, setShowModal] = useState(false);
+  const [selectedInquiry, setSelectedInquiry] = useState<Inquiry | null>(null);
 
   useEffect(() => {
     loadInquiries();
@@ -25,10 +24,10 @@ export default function InquiriesPage() {
 
   const loadInquiries = async () => {
     try {
-      const data = await fetcher('/inquiries/');
+      const data = await fetcher('/inquiries');
       setInquiries(data);
     } catch (error) {
-      console.error(error);
+      console.error('Failed to load inquiries', error);
     } finally {
       setLoading(false);
     }
@@ -38,114 +37,104 @@ export default function InquiriesPage() {
     if (!confirm('Are you sure you want to delete this inquiry?')) return;
     try {
       await fetcher(`/inquiries/${id}`, { method: 'DELETE' });
-      setInquiries(inquiries.filter((i) => i.id !== id));
+      setInquiries(inquiries.filter(i => i.id !== id));
+      if (selectedInquiry?.id === id) setSelectedInquiry(null);
     } catch (error) {
-      alert('Failed to delete');
+      alert('Failed to delete inquiry');
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className="p-8">Loading...</div>;
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">Inquiries</h1>
+    <div className="h-[calc(100vh-100px)] flex flex-col">
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">Inquiries & Leads</h1>
       
-      <div className="bg-white rounded-xl shadow overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Message</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+      <div className="flex flex-1 gap-6 overflow-hidden">
+        {/* List View */}
+        <div className="w-1/3 bg-white rounded-xl shadow-sm border overflow-hidden flex flex-col">
+          <div className="p-4 border-b bg-gray-50 font-medium text-gray-500 text-xs uppercase tracking-wider">
+            Recent Inquiries
+          </div>
+          <div className="flex-1 overflow-y-auto divide-y">
             {inquiries.map((inquiry) => (
-              <tr
+              <div 
                 key={inquiry.id}
-                className="hover:bg-gray-50 cursor-pointer"
-                onClick={() => {
-                  setSelected(inquiry);
-                  setShowModal(true);
-                }}
+                onClick={() => setSelectedInquiry(inquiry)}
+                className={`p-4 cursor-pointer hover:bg-gray-50 transition ${selectedInquiry?.id === inquiry.id ? 'bg-blue-50 border-l-4 border-primary' : ''}`}
               >
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {new Date(inquiry.created_at).toLocaleDateString()}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">{inquiry.name}</div>
-                  <div className="text-sm text-gray-500">{inquiry.email}</div>
-                  <div className="text-sm text-gray-500">{inquiry.phone}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                    {inquiry.inquiry_type}
+                <div className="flex justify-between items-start mb-1">
+                  <span className="font-semibold text-gray-900 truncate">{inquiry.name}</span>
+                  <span className="text-xs text-gray-400 whitespace-nowrap">
+                    {new Date(inquiry.created_at).toLocaleDateString()}
                   </span>
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
-                  {inquiry.message}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(inquiry.id);
-                    }}
-                    className="text-red-600 hover:text-red-900"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      {showModal && selected && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-white w-[90%] max-w-lg rounded-xl shadow-lg border border-gray-100 p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-bold">Inquiry Details</h2>
-              <button
-                onClick={() => setShowModal(false)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                ✕
-              </button>
-            </div>
-            <div className="space-y-2 text-sm">
-              <div><span className="font-semibold">Date:</span> {new Date(selected.created_at).toLocaleString()}</div>
-              <div><span className="font-semibold">Name:</span> {selected.name}</div>
-              <div><span className="font-semibold">Email:</span> {selected.email}</div>
-              <div><span className="font-semibold">Phone:</span> {selected.phone}</div>
-              <div><span className="font-semibold">Type:</span> {selected.inquiry_type}</div>
-              <div className="mt-3">
-                <span className="font-semibold">Message:</span>
-                <div className="mt-1 p-3 bg-gray-50 border border-gray-200 rounded">{selected.message}</div>
+                </div>
+                <div className="text-xs font-medium text-primary mb-1 uppercase tracking-wide">
+                  {inquiry.inquiry_type}
+                </div>
+                <p className="text-sm text-gray-600 truncate">{inquiry.message}</p>
               </div>
-            </div>
-            <div className="mt-6 flex justify-end gap-2">
-              <button
-                onClick={() => setShowModal(false)}
-                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-              >
-                Close
-              </button>
-              <button
-                onClick={() => {
-                  setShowModal(false);
-                  handleDelete(selected.id);
-                }}
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-              >
-                Delete
-              </button>
-            </div>
+            ))}
+            {inquiries.length === 0 && (
+              <div className="p-8 text-center text-gray-500">No inquiries found</div>
+            )}
           </div>
         </div>
-      )}
+
+        {/* Detail View */}
+        <div className="flex-1 bg-white rounded-xl shadow-sm border overflow-hidden flex flex-col">
+          {selectedInquiry ? (
+            <div className="flex-1 flex flex-col">
+              {/* Header */}
+              <div className="p-6 border-b flex justify-between items-start bg-gray-50">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">{selectedInquiry.name}</h2>
+                  <div className="flex gap-4 mt-2 text-sm text-gray-600">
+                    <a href={`mailto:${selectedInquiry.email}`} className="hover:text-primary flex items-center gap-1">
+                      ✉️ {selectedInquiry.email}
+                    </a>
+                    {selectedInquiry.phone && (
+                      <a href={`tel:${selectedInquiry.phone}`} className="hover:text-primary flex items-center gap-1">
+                        📞 {selectedInquiry.phone}
+                      </a>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-medium uppercase">
+                    {selectedInquiry.inquiry_type}
+                  </span>
+                  <button 
+                    onClick={() => handleDelete(selectedInquiry.id)}
+                    className="text-red-500 hover:text-red-700 p-2 hover:bg-red-50 rounded"
+                    title="Delete Inquiry"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              </div>
+
+              {/* Body */}
+              <div className="p-8 flex-1 overflow-y-auto">
+                <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4">Message</h3>
+                <div className="prose max-w-none text-gray-800 whitespace-pre-wrap leading-relaxed">
+                  {selectedInquiry.message}
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className="p-4 border-t bg-gray-50 text-xs text-gray-400 text-center">
+                Received on {new Date(selectedInquiry.created_at).toLocaleString()}
+              </div>
+            </div>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center text-gray-400">
+              <span className="text-6xl mb-4">📩</span>
+              <p>Select an inquiry to view details</p>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

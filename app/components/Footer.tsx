@@ -11,7 +11,7 @@ const Footer = ({ content = {} }: FooterProps) => {
   const phone = content.contact_phone || "+966 12 345 6789";
   const address = content.address || "Main Commercial District,\nJeddah, Saudi Arabia";
   const companyName = content.company_name || "Trans Emirates";
-  const description = content.footer_description || "Your trusted partner in food distribution, supply chain management, and business consulting across the Kingdom of Saudi Arabia.";
+  const description = content.footer_description || "Your trusted partner in global food trading, supply chain management, and wholesale distribution across the Kingdom of Saudi Arabia.";
 
   return (
     <footer className="bg-secondary text-primary relative overflow-hidden">
@@ -41,14 +41,36 @@ const Footer = ({ content = {} }: FooterProps) => {
           <div className="lg:col-span-2">
             <h4 className="text-xl font-bold mb-4 text-white border-b-2 border-primary/20 pb-2 inline-block">Explore</h4>
             <ul className="space-y-3 font-medium">
-              {['Home', 'About Us', 'Our Products', 'Consulting', 'Market Coverage', 'Contact'].map((item) => (
-                <li key={item}>
-                  <Link href={`/${item.toLowerCase().replace(' ', '-')}`} className="flex items-center text-primary/80 hover:text-white transition-colors duration-200">
-                    <span className="w-1.5 h-1.5 bg-primary/40 rounded-full mr-3"></span>
-                    {item}
-                  </Link>
-                </li>
-              ))}
+              <li>
+                <Link href="/" className="flex items-center text-primary/80 hover:text-white transition-colors duration-200">
+                  <span className="w-1.5 h-1.5 bg-primary/40 rounded-full mr-3"></span>
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link href="/about" className="flex items-center text-primary/80 hover:text-white transition-colors duration-200">
+                  <span className="w-1.5 h-1.5 bg-primary/40 rounded-full mr-3"></span>
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link href="/products" className="flex items-center text-primary/80 hover:text-white transition-colors duration-200">
+                  <span className="w-1.5 h-1.5 bg-primary/40 rounded-full mr-3"></span>
+                  Commodities
+                </Link>
+              </li>
+              <li>
+                <Link href="/market-coverage" className="flex items-center text-primary/80 hover:text-white transition-colors duration-200">
+                  <span className="w-1.5 h-1.5 bg-primary/40 rounded-full mr-3"></span>
+                  Logistics
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="flex items-center text-primary/80 hover:text-white transition-colors duration-200">
+                  <span className="w-1.5 h-1.5 bg-primary/40 rounded-full mr-3"></span>
+                  Contact
+                </Link>
+              </li>
             </ul>
           </div>
 

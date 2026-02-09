@@ -1,6 +1,16 @@
 import React from 'react';
 
-const LeadershipMessage = () => {
+interface LeadershipMessageProps {
+  content?: Record<string, string>;
+}
+
+const LeadershipMessage = ({ content }: LeadershipMessageProps) => {
+  const title = content?.leadership_title || "A Vision for Excellence";
+  const message = content?.leadership_message || "For over two decades, Trans Emirates has been committed to bridging global markets with Saudi Arabia's growing economy. Our success is built on unwavering integrity, quality without compromise, and a deep understanding of our partners' needs.";
+  const name = content?.leadership_name || "Mohammed Al-Ghamdi";
+  const role = content?.leadership_role || "Chairman of the Board";
+  const image = content?.leadership_image || "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80";
+
   return (
     <section className="py-16 bg-white relative overflow-hidden">
       {/* Decorative Background Elements */}
@@ -18,19 +28,20 @@ const LeadershipMessage = () => {
             <div className="shrink-0">
               <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gray-200 border-4 border-white shadow-lg overflow-hidden relative">
                  {/* Using a professional business portrait placeholder */}
-                 <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')" }}></div>
+                 <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('${image}')` }}></div>
               </div>
             </div>
 
             {/* Content */}
             <div className="text-center md:text-left">
-              <h3 className="text-2xl font-bold text-primary mb-4">A Vision for Excellence</h3>
-              <p className="text-primary/70 text-lg leading-relaxed italic mb-6">
-                "For over two decades, Trans Emirates has been committed to bridging global markets with Saudi Arabia's growing economy. Our success is built on unwavering integrity, quality without compromise, and a deep understanding of our partners' needs."
-              </p>
+              <h3 className="text-2xl font-bold text-primary mb-4">{title}</h3>
+              <div 
+                className="text-primary/70 text-lg leading-relaxed italic mb-6"
+                dangerouslySetInnerHTML={{ __html: message }}
+              />
               <div>
-                <h4 className="text-xl font-bold text-primary">Mohammed Al-Ghamdi</h4>
-                <span className="text-accent font-medium uppercase text-sm tracking-wider">Chairman of the Board</span>
+                <h4 className="text-xl font-bold text-primary">{name}</h4>
+                <span className="text-accent font-medium uppercase text-sm tracking-wider">{role}</span>
               </div>
             </div>
           </div>

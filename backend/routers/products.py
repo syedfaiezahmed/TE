@@ -62,6 +62,13 @@ def read_product(product_id: int, session: Session = Depends(get_session)):
         raise HTTPException(status_code=404, detail="Product not found")
     return product
 
+@router.get("/products/slug/{slug}", response_model=Product)
+def read_product_by_slug(slug: str, session: Session = Depends(get_session)):
+    product = session.exec(select(Product).where(Product.slug == slug)).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return product
+
 @router.post("/products", response_model=Product)
 def create_product(product: Product, session: Session = Depends(get_session), current_user: AdminUser = Depends(get_current_user)):
     session.add(product)

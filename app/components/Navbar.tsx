@@ -48,13 +48,10 @@ const Navbar = () => {
             About Us
           </Link>
           <Link href="/products" className="hover:text-accent transition-colors">
-            Products
-          </Link>
-          <Link href="/consulting" className="hover:text-accent transition-colors">
-            Consulting
+            Commodities
           </Link>
           <Link href="/market-coverage" className="hover:text-accent transition-colors">
-            Coverage
+            Logistics
           </Link>
           <Link href="/contact" className="hover:text-accent transition-colors">
             Contact
@@ -63,9 +60,9 @@ const Navbar = () => {
           {/* CTA Button */}
           <Link 
             href="/contact" 
-            className="bg-white hover:bg-gray-100 text-primary font-bold py-2 px-6 rounded-full transition-all transform hover:scale-105 shadow-lg"
+            className="bg-accent hover:bg-accent-light text-primary font-bold py-2 px-6 rounded-md transition-all transform hover:-translate-y-0.5 shadow-lg uppercase tracking-wider text-sm"
           >
-            Get a Quote
+            Request Quote
           </Link>
         </div>
 
@@ -115,17 +112,12 @@ const Navbar = () => {
             </li>
             <li>
               <Link href="/products" onClick={toggleMenu} className="block hover:text-accent transition-colors">
-                Products
-              </Link>
-            </li>
-            <li>
-              <Link href="/consulting" onClick={toggleMenu} className="block hover:text-accent transition-colors">
-                Consulting
+                Commodities
               </Link>
             </li>
             <li>
               <Link href="/market-coverage" onClick={toggleMenu} className="block hover:text-accent transition-colors">
-                Coverage
+                Logistics
               </Link>
             </li>
             <li>
@@ -137,9 +129,9 @@ const Navbar = () => {
               <Link 
                 href="/contact" 
                 onClick={toggleMenu}
-                className="inline-block w-full bg-accent text-primary font-bold py-3 rounded-lg hover:bg-accent-light transition-colors"
+                className="inline-block w-full bg-accent text-primary font-bold py-3 rounded-md hover:bg-accent-light transition-colors uppercase tracking-wider"
               >
-                Get a Quote
+                Request Quote
               </Link>
             </li>
           </ul>

@@ -7,14 +7,13 @@ interface WhoWeAreProps {
 const WhoWeAre = ({ content }: WhoWeAreProps) => {
   const title = content.whoweare_title || "Who We Are";
   // Fallback text if not provided in CMS
-  const defaultText = "A leading distributor of premium food products across major cities and rural markets in the Kingdom of Saudi Arabia. We ensure quality and reliability in every delivery, connecting global producers with local consumers.";
+  const defaultText = "Engineering trusted global trade at scale. We connect international producers with the Saudi market through technology-enabled supply chains, ensuring quality, reliability, and efficiency in every transaction.";
   const mainText = content.whoweare_text || defaultText;
 
   return (
     <section className="py-16 bg-background overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <span className="text-primary font-bold uppercase tracking-widest text-sm bg-secondary/10 px-4 py-1 rounded-full">Our Divisions</span>
           <h2 className="text-4xl md:text-5xl font-bold text-primary mt-4">{title}</h2>
           <div className="w-24 h-1.5 bg-accent mx-auto mt-6 rounded-full"></div>
         </div>
@@ -24,101 +23,69 @@ const WhoWeAre = ({ content }: WhoWeAreProps) => {
           {/* Division 1: Trading */}
           <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
             <div className="w-full lg:w-1/2 relative group">
-              <div className="absolute -inset-4 bg-accent/20 rounded-2xl transform rotate-3 group-hover:rotate-6 transition-transform duration-500"></div>
-              <div className="relative h-[400px] w-full rounded-2xl overflow-hidden shadow-2xl">
+              <div className="absolute -inset-4 bg-accent/20 rounded-sm transform rotate-3 group-hover:rotate-6 transition-transform duration-500"></div>
+              <div className="relative h-[500px] w-full rounded-sm overflow-hidden shadow-2xl">
                 <div 
                   className="absolute inset-0 bg-cover bg-center transform group-hover:scale-110 transition-transform duration-700"
-                  style={{ backgroundImage: "url('https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1934&q=80')" }}
+                  style={{ backgroundImage: "url('https://images.unsplash.com/photo-1553413077-190dd305871c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1934&q=80')" }}
                 ></div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
               </div>
-              <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-secondary rounded-full flex items-center justify-center shadow-xl z-10 hidden md:flex">
-                <span className="text-white font-bold text-xl text-center leading-tight">Trusted<br/>Partner</span>
+              <div className="absolute -bottom-6 -right-6 w-40 h-40 bg-secondary rounded-sm flex flex-col items-center justify-center shadow-xl z-10 hidden md:flex border-4 border-white">
+                <span className="text-white font-bold text-3xl">25+</span>
+                <span className="text-white/80 text-xs uppercase tracking-wider mt-1">Years of<br/>Excellence</span>
               </div>
             </div>
             
             <div className="w-full lg:w-1/2 space-y-8">
               <div>
-                <h3 className="text-3xl md:text-4xl font-bold text-primary mb-3">Trans Emirates Trading</h3>
-                <p className="text-accent font-bold text-lg uppercase tracking-wide">Foodstuff Distribution & Supply Chain</p>
+                <div className="inline-block bg-primary/5 px-3 py-1 rounded-sm mb-4">
+                  <span className="text-primary font-bold text-sm uppercase tracking-wider">Since 2000</span>
+                </div>
+                <h3 className="text-4xl md:text-5xl font-bold text-primary mb-4 leading-tight">Trans Emirates Trading</h3>
+                <p className="text-accent font-bold text-lg uppercase tracking-wide border-l-4 border-accent pl-4">Global Trade & Supply Chain Solutions</p>
               </div>
               
-              <p className="text-primary/80 text-lg leading-relaxed">
-                {mainText}
-              </p>
+              <div 
+                className="text-gray-600 text-lg leading-relaxed font-light"
+                dangerouslySetInnerHTML={{ __html: mainText }}
+              />
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-center p-4 bg-background rounded-lg border border-secondary/20">
-                  <span className="w-3 h-3 bg-primary rounded-full mr-3"></span>
-                  <span className="text-primary font-semibold">Nationwide Network</span>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="flex items-start p-4 bg-gray-50 rounded-sm hover:bg-white hover:shadow-lg transition-all border-l-4 border-transparent hover:border-accent">
+                  <div className="text-2xl mr-4">🌍</div>
+                  <div>
+                    <h4 className="font-bold text-primary">Global Network</h4>
+                    <p className="text-sm text-gray-500">Connecting 30+ countries</p>
+                  </div>
                 </div>
-                <div className="flex items-center p-4 bg-background rounded-lg border border-secondary/20">
-                  <span className="w-3 h-3 bg-primary rounded-full mr-3"></span>
-                  <span className="text-primary font-semibold">Global Sourcing</span>
+                <div className="flex items-start p-4 bg-gray-50 rounded-sm hover:bg-white hover:shadow-lg transition-all border-l-4 border-transparent hover:border-accent">
+                  <div className="text-2xl mr-4">🏭</div>
+                  <div>
+                    <h4 className="font-bold text-primary">Direct Sourcing</h4>
+                    <p className="text-sm text-gray-500">From producers to you</p>
+                  </div>
                 </div>
-                <div className="flex items-center p-4 bg-background rounded-lg border border-secondary/20">
-                  <span className="w-3 h-3 bg-primary rounded-full mr-3"></span>
-                  <span className="text-primary font-semibold">Retail Partnerships</span>
+                <div className="flex items-start p-4 bg-gray-50 rounded-sm hover:bg-white hover:shadow-lg transition-all border-l-4 border-transparent hover:border-accent">
+                  <div className="text-2xl mr-4">🚛</div>
+                  <div>
+                    <h4 className="font-bold text-primary">Efficient Logistics</h4>
+                    <p className="text-sm text-gray-500">End-to-end management</p>
+                  </div>
                 </div>
-                <div className="flex items-center p-4 bg-background rounded-lg border border-secondary/20">
-                  <span className="w-3 h-3 bg-primary rounded-full mr-3"></span>
-                  <span className="text-primary font-semibold">Quality Assurance</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Division 2: Consulting */}
-          <div className="flex flex-col lg:flex-row-reverse items-center gap-12 lg:gap-20">
-            <div className="w-full lg:w-1/2 relative group">
-              <div className="absolute -inset-4 bg-primary/10 rounded-2xl transform -rotate-3 group-hover:-rotate-6 transition-transform duration-500"></div>
-              <div className="relative h-[400px] w-full rounded-2xl overflow-hidden shadow-2xl">
-                <div 
-                  className="absolute inset-0 bg-cover bg-center transform group-hover:scale-110 transition-transform duration-700"
-                  style={{ backgroundImage: "url('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')" }}
-                ></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-              </div>
-              <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-primary rounded-full flex items-center justify-center shadow-xl z-10 hidden md:flex">
-                <span className="text-white font-bold text-xl text-center leading-tight">Expert<br/>Advice</span>
-              </div>
-            </div>
-            
-            <div className="w-full lg:w-1/2 space-y-8">
-              <div>
-                <h3 className="text-3xl md:text-4xl font-bold text-primary mb-3">Prospera Consulting</h3>
-                <p className="text-accent font-bold text-lg uppercase tracking-wide">Finance, tax, ERP & digital advisory for SMEs & investors</p>
-              </div>
-              
-              <p className="text-primary/80 text-lg leading-relaxed">
-                Empowering SMEs and investors with expert financial guidance, tax optimization strategies, and cutting-edge technology solutions to drive sustainable growth in the dynamic Saudi market.
-              </p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-center p-4 bg-background rounded-lg border border-primary/10">
-                  <span className="w-3 h-3 bg-accent rounded-full mr-3"></span>
-                  <span className="text-primary font-semibold">Strategic Planning</span>
-                </div>
-                <div className="flex items-center p-4 bg-background rounded-lg border border-primary/10">
-                  <span className="w-3 h-3 bg-accent rounded-full mr-3"></span>
-                  <span className="text-primary font-semibold">Zakat & Tax</span>
-                </div>
-                <div className="flex items-center p-4 bg-background rounded-lg border border-primary/10">
-                  <span className="w-3 h-3 bg-accent rounded-full mr-3"></span>
-                  <span className="text-primary font-semibold">Digital Solutions</span>
-                </div>
-                <div className="flex items-center p-4 bg-background rounded-lg border border-primary/10">
-                  <span className="w-3 h-3 bg-accent rounded-full mr-3"></span>
-                  <span className="text-primary font-semibold">Business Growth</span>
+                <div className="flex items-start p-4 bg-gray-50 rounded-sm hover:bg-white hover:shadow-lg transition-all border-l-4 border-transparent hover:border-accent">
+                  <div className="text-2xl mr-4">✅</div>
+                  <div>
+                    <h4 className="font-bold text-primary">Quality Assurance</h4>
+                    <p className="text-sm text-gray-500">ISO 22000 Certified</p>
+                  </div>
                 </div>
               </div>
 
-              <div className="pt-4">
-                <Link href="/consulting" className="inline-flex items-center text-primary font-bold border-b-2 border-accent pb-1 hover:text-accent transition-colors">
-                  Explore Consulting Services
-                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                </Link>
-              </div>
+              <Link href="/about" className="inline-flex items-center text-primary font-bold hover:text-accent transition-colors group">
+                <span>Discover Our Story</span>
+                <svg className="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              </Link>
             </div>
           </div>
 
