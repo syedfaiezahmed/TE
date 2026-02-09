@@ -48,7 +48,7 @@ export default async function RootLayout({
 }>) {
   const content = await getContent();
   const cookieStore = await cookies();
-  const hasSelected = cookieStore.has('te_division_selected');
+  const hasSelected = cookieStore.has('te_division_selected_v2');
 
   return (
     <html lang="en" suppressHydrationWarning>
