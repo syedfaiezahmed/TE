@@ -11,6 +11,15 @@ const DivisionModal = ({ shouldShow }: DivisionModalProps) => {
   const [isVisible, setIsVisible] = useState(shouldShow);
 
   useEffect(() => {
+    // Check cookie on mount to ensure modal shows if cookie is missing
+    const hasCookie = document.cookie.split(';').some(c => c.trim().startsWith('te_division_selected='));
+    if (!hasCookie && !shouldShow) {
+      setIsOpen(true);
+      setIsVisible(true);
+    }
+  }, [shouldShow]);
+
+  useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
     }
@@ -26,7 +35,7 @@ const DivisionModal = ({ shouldShow }: DivisionModalProps) => {
   };
 
   const handleTradingClick = () => {
-    setCookie('divisionSelected', 'true', 365);
+    setCookie('te_division_selected', 'true', 365);
     setIsVisible(false);
     setTimeout(() => {
       setIsOpen(false);
@@ -35,7 +44,7 @@ const DivisionModal = ({ shouldShow }: DivisionModalProps) => {
   };
 
   const handleConsultingClick = () => {
-    setCookie('divisionSelected', 'true', 365);
+    setCookie('te_division_selected', 'true', 365);
     window.location.href = 'https://prosperaksa.com';
   };
 
