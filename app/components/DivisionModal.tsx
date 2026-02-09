@@ -13,7 +13,7 @@ const DivisionModal = ({ shouldShow }: DivisionModalProps) => {
   useEffect(() => {
     // Check cookie on mount to ensure modal shows if cookie is missing
     const checkCookie = () => {
-      const hasCookie = document.cookie.split(';').some(c => c.trim().startsWith('te_division_selected_v2='));
+      const hasCookie = document.cookie.split(';').some(c => c.trim().startsWith('te_division_session='));
       console.log('DivisionModal check:', { hasCookie, shouldShow, isOpen });
       
       if (!hasCookie) {
@@ -36,13 +36,13 @@ const DivisionModal = ({ shouldShow }: DivisionModalProps) => {
     };
   }, [isOpen]);
 
-  const setCookie = (name: string, value: string, days: number) => {
-    const expires = new Date(Date.now() + days * 864e5).toUTCString();
-    document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/';
+  const setCookie = (name: string, value: string) => {
+    // Session cookie: no expires attribute
+    document.cookie = name + '=' + encodeURIComponent(value) + '; path=/';
   };
 
   const handleTradingClick = () => {
-    setCookie('te_division_selected_v2', 'true', 365);
+    setCookie('te_division_session', 'true');
     setIsVisible(false);
     setTimeout(() => {
       setIsOpen(false);
@@ -51,7 +51,7 @@ const DivisionModal = ({ shouldShow }: DivisionModalProps) => {
   };
 
   const handleConsultingClick = () => {
-    setCookie('te_division_selected_v2', 'true', 365);
+    setCookie('te_division_session', 'true');
     window.location.href = 'https://prosperaksa.com';
   };
 
