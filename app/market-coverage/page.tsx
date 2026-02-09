@@ -48,11 +48,19 @@ const CITY_COORDINATES: Record<string, [number, number]> = {
   "Bisha": [20.0005, 42.6019]
 };
 
+interface RegionDisplay {
+  name: string;
+  hub: string;
+  cities: string[];
+  color: string;
+  borderColor: string;
+}
+
 const MarketCoveragePage = async () => {
   const { regions: dbRegions, cities: dbCities } = await getCoverageData();
 
   // Fallback data if DB is empty
-  const regions = dbRegions.length > 0 ? dbRegions.map((r: any, index: number) => {
+  const regions: RegionDisplay[] = dbRegions.length > 0 ? dbRegions.map((r: any, index: number) => {
     const regionCities = dbCities.filter((c: any) => c.region_id === r.id);
     return {
       name: r.name,
@@ -85,7 +93,7 @@ const MarketCoveragePage = async () => {
     }
   ];
 
-  const mapMarkers = regions.flatMap((r: any) => 
+  const mapMarkers = regions.flatMap((r: RegionDisplay) => 
     r.cities.map((city: string) => {
       const cleanCity = city.replace(/ \(HQ\)| \(Branch\)/g, '');
       const coords = CITY_COORDINATES[cleanCity];
